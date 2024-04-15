@@ -1,0 +1,136 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Unity.Services.Ugc.Samples
+{
+    public class ContentBrowser : UnityEngine.MonoBehaviour
+    {
+        public UnityEngine.Events.UnityEvent<Content> OnContentPlayEvent;
+        public ContentBrowser() {}
+        public void Hide();
+        public void Show();
+    }
+
+    public class ContentCardView : UnityEngine.MonoBehaviour
+    {
+        public event System.Action<Content> OnViewContentEvent;
+        public ContentCardView() {}
+        public void ClearViewEvent();
+        public void SetContent(Content content);
+    }
+
+    public class ContentDialogView : UnityEngine.MonoBehaviour
+    {
+        public event System.Action<Content> OnContentPlayedEvent;
+        public event System.Action OnDialogViewClosedEvent;
+        public ContentDialogView() {}
+        public void Hide();
+        public void ShowContent(Content content);
+    }
+
+    public class ContentGroupView : UnityEngine.MonoBehaviour
+    {
+        public event System.Action<Content> OnViewContentEvent;
+        public ContentGroupView() {}
+        public void Initialize(int contentPerPage);
+        public void RefreshContentList(Content[] pageContent);
+    }
+
+    public enum ContentLibraryType
+    {
+        AllContent = 0,
+        Subscribed = 1,
+    }
+
+    public class ContentPaginationView : UnityEngine.MonoBehaviour
+    {
+        public event System.Action<int> OnPageChangedEvent;
+        public int currentPageIndex { get; }
+        public ContentPaginationView() {}
+        public void RefreshPagination(int pagesCount);
+        public void ResetPaginationIndex();
+    }
+
+    public class ContentSearchView : UnityEngine.MonoBehaviour
+    {
+        public event System.Action OnRefreshSearchEvent;
+        public event System.Action<string> OnSearchInputSubmittedEvent;
+        public event System.Action<SearchContentSortBy> OnSortByDropdownValueChanged;
+        public string searchTerm { get; }
+        public ContentSearchView() {}
+        public void ClearSearchField();
+        public SearchContentSortBy GetSortBy();
+        public void ToggleSortByDropDown(bool show);
+    }
+
+    public class CounterButton : UnityEngine.UI.Button
+    {
+        public CounterButton() {}
+        public void SetCount(int count);
+        public void SetState(bool active);
+    }
+
+    public class FeaturedContentButton : UnityEngine.UI.Button
+    {
+        public FeaturedContentButton() {}
+        public System.Threading.Tasks.Task SetContent(Content content);
+        protected override void Start();
+    }
+
+    public class FeaturedContentCardView : UnityEngine.MonoBehaviour
+    {
+        public event System.Action OnViewButtonPressedEvent;
+        public FeaturedContentCardView() {}
+        public System.Threading.Tasks.Task SetContent(Content content);
+    }
+
+    public class FeaturedContentView : UnityEngine.MonoBehaviour
+    {
+        public event System.Action<Content> OnViewContentEvent;
+        public FeaturedContentView() {}
+        public System.Threading.Tasks.Task RefreshFeaturedContentList();
+    }
+
+    public class HeaderTabButton : UnityEngine.UI.Button
+    {
+        public HeaderTabButton() {}
+        protected override void OnDestroy();
+        public void SetState(bool isSelected);
+        protected override void Start();
+    }
+
+    public class HeaderView : UnityEngine.MonoBehaviour
+    {
+        public event System.Action OnAllContentTabSelectedEvent;
+        public event System.Action OnCloseContentBrowserPressedEvent;
+        public event System.Action OnSubscribedTabSelectedEvent;
+        public HeaderView() {}
+        public void RefreshTabButtonsState(ContentLibraryType contentLibraryType);
+    }
+
+    public class NonDrawingGraphic : UnityEngine.UI.Graphic
+    {
+        public NonDrawingGraphic() {}
+        protected override void OnPopulateMesh(UnityEngine.UI.VertexHelper vh);
+        public override void SetMaterialDirty();
+        public override void SetVerticesDirty();
+    }
+
+    public class PageButton : UnityEngine.UI.Button
+    {
+        public PageButton() {}
+        public void SetPageIndex(int index);
+        public void SetSelectedState(bool isSelected);
+    }
+
+    public class SubscriptionButton : UnityEngine.UI.Button
+    {
+        public SubscriptionButton() {}
+        public void SetSubscriptionState(bool toggle);
+    }
+
+    public static class TextureUtilities
+    {
+        public static UnityEngine.Vector2 CalculateNewTextureSize(UnityEngine.Vector2 containerSize, UnityEngine.Texture texture);
+    }
+}

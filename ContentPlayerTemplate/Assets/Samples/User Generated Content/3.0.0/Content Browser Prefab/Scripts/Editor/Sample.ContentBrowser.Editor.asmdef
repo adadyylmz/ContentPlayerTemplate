@@ -1,0 +1,20 @@
+{
+    "name": "Sample.ContentBrowser.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:121b1127f81a64d3a89d30da287744f6"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "TEXTMESHPRO_3_0_OR_NEWER"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: VRTemplate_Remote
+  m_EditorClassIdentifier: 
+  m_GroupName: VRTemplate_Remote
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 943f8a3453e770943bd6c9b79bf9bd5f
+  m_SerializeEntries:
+  - m_GUID: a54286bb4ebd77940ae2618b4f1f32d4
+    m_Address: Pond
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 49987728ae4366a41996f119c4eaf6af
+    m_Address: ShootingGameScene
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6243664ca9549b341a568483792f023c
+    m_Address: EmptyScene
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 839e6bd83213655468fd13bcacd2a06a
+    m_Address: XRDemoScene
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 52b7ceb01da812646a28ab8972fc893c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 0019ae3617b3bdc459cc49558c33399a, type: 2}
+    - {fileID: 11400000, guid: b4571cdf52f833a468ff91b4c4b6827c, type: 2}

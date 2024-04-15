@@ -1,0 +1,41 @@
+// This file is generated. Do not modify by hand.
+// XML documentation file not found. To check if public methods have XML comments,
+// make sure the XML doc file is present and located next to the scraped dll
+namespace Unity.Services.Ugc.Samples.Editor
+{
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(CounterButton))] public class CounterButtonEditor : UnityEditor.UI.ButtonEditor
+    {
+        public CounterButtonEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(FeaturedContentButton))] public class FeaturedContentButtonEditor : UnityEditor.UI.ButtonEditor
+    {
+        public FeaturedContentButtonEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(HeaderTabButton))] public class HeaderTabButtonEditor : UnityEditor.UI.ButtonEditor
+    {
+        public HeaderTabButtonEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(NonDrawingGraphic), false)] public class NonDrawingGraphicEditor : UnityEditor.UI.GraphicEditor
+    {
+        public NonDrawingGraphicEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(PageButton))] public class PageButtonEditor : UnityEditor.UI.ButtonEditor
+    {
+        public PageButtonEditor() {}
+        public override void OnInspectorGUI();
+    }
+
+    [UnityEditor.CanEditMultipleObjects] [UnityEditor.CustomEditor(typeof(SubscriptionButton))] public class SubscriptionButtonEditor : UnityEditor.UI.ButtonEditor
+    {
+        public SubscriptionButtonEditor() {}
+        public override void OnInspectorGUI();
+    }
+}

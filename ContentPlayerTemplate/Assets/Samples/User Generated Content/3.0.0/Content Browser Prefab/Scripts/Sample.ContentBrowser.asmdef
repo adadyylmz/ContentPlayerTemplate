@@ -1,0 +1,29 @@
+{
+    "name": "Sample.ContentBrowser",
+    "rootNamespace": "",
+    "references": [
+        "GUID:df1a35458a836e34a94fe6f17cba4845",
+        "GUID:067f0d7eec3184fdc86293ef0d857f3d",
+        "GUID:fe25561d224ed4743af4c60938a59d0b",
+        "GUID:70ea675efa2644cef98c7ece24158333",
+        "GUID:5540e30183c82e84b954c033c388e06c",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "TEXTMESHPRO_3_0_OR_NEWER"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.textmeshpro",
+            "expression": "3.0.0-preview.0",
+            "define": "TEXTMESHPRO_3_0_OR_NEWER"
+        }
+    ],
+    "noEngineReferences": false
+}
