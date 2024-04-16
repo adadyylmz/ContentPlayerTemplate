@@ -9,11 +9,10 @@ public class SceneLoaderManager : MonoBehaviour
 {
     #region Fields
 
-    //[SerializeField] private AssetReference EmptyScene;
     //[SerializeField] private AssetReference LobbyScene;
-
+    [SerializeField] private AssetReference TestScene;
     [SerializeField] private AssetReference XRDemoScene;
-    [SerializeField] private AssetReference ShootingGameScene;
+    [SerializeField] private AssetReference ParkourGameScene;
     [SerializeField] AsyncOperationHandle<SceneInstance> _sceneLoaderHandler;
 
     #endregion
@@ -29,22 +28,22 @@ public class SceneLoaderManager : MonoBehaviour
 
     }
 
-    /*
+    
     //Test scene is causing error: unknown
     [Button("Load Test Scene")]
-    public async void LoadEmptyScene()
+    public async void LoadTestScene()
     {
-        await LoadAddressableScene(EmptyScene);
+        await LoadAddressableScene(TestScene);
         Debug.Log("Empty scene loaded remotely.");
 
     }
-    */
+    
 
-    [Button("Load Shooting Game Scene")]
-    public async void LoadShootingGameScene()
+    [Button("Load Parkour Game Scene")]
+    public async void LoadParkourGameScene()
     {
-        await LoadAddressableScene(ShootingGameScene);
-        Debug.Log("Shooting game scene loaded remotely.");
+        await LoadAddressableScene(ParkourGameScene);
+        Debug.Log("Parkour game scene loaded remotely.");
     }
 
     [Button("Return to Lobby")]

@@ -23,20 +23,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - default
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 49987728ae4366a41996f119c4eaf6af
-    m_Address: ShootingGameScene
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - default
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6243664ca9549b341a568483792f023c
-    m_Address: EmptyScene
+    m_Address: TestScene
     m_ReadOnly: 0
     m_SerializedLabels:
     - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 839e6bd83213655468fd13bcacd2a06a
     m_Address: XRDemoScene
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - default
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 44b0cb9c60bff4746a633981b7b855b4
+    m_Address: ParkourGameScene
     m_ReadOnly: 0
     m_SerializedLabels:
     - default

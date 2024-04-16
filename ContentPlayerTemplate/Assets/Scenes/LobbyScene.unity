@@ -696,12 +696,12 @@ GameObject:
   - component: {fileID: 1868186483}
   - component: {fileID: 1868186482}
   m_Layer: 5
-  m_Name: EmptySceneButton
+  m_Name: TestSceneButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1868186481
 RectTransform:
   m_ObjectHideFlags: 0
@@ -800,7 +800,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 658472785687899314}
         m_TargetAssemblyTypeName: SceneLoaderManager, Assembly-CSharp
-        m_MethodName: LoadEmptyScene
+        m_MethodName: LoadTestScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1082,13 +1082,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0546c7a3e78c00a45a38a2fdb23a44d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TestScene:
+    m_AssetGUID: 6243664ca9549b341a568483792f023c
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   XRDemoScene:
     m_AssetGUID: 839e6bd83213655468fd13bcacd2a06a
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  ShootingGameScene:
-    m_AssetGUID: 49987728ae4366a41996f119c4eaf6af
+  ParkourGameScene:
+    m_AssetGUID: 44b0cb9c60bff4746a633981b7b855b4
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
@@ -1190,6 +1195,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: PlayVideoWaterfall
       objectReference: {fileID: 0}
+    - target: {fileID: 8331947068226262904, guid: feb8e84f10048564dae1ea39b4b5e8b2,
+        type: 3}
+      propertyPath: m_Text
+      value: Load Parkour Game
+      objectReference: {fileID: 0}
     - target: {fileID: 8331947068710771712, guid: feb8e84f10048564dae1ea39b4b5e8b2,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1208,7 +1218,12 @@ PrefabInstance:
     - target: {fileID: 8331947068865735465, guid: feb8e84f10048564dae1ea39b4b5e8b2,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LoadShootingGameScene
+      value: LoadParkourGameScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331947068865735466, guid: feb8e84f10048564dae1ea39b4b5e8b2,
+        type: 3}
+      propertyPath: m_Name
+      value: ParkourGameButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
