@@ -1,115 +1,101 @@
 using UnityEngine;
-using DG.Tweening;
-using System;
-using NaughtyAttributes;
 using UnityEngine.Video;
+using UnityEngine.UI;
+using TMPro;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-
+using System.Collections.Generic;
+using System.Collections;
 
 public class VideoPlayerManager : MonoBehaviour
 {
     #region Fields
     public VideoPlayer videoPlayer;
-    public float fadeDuration = 2.0f;
     private Material _skyMaterial;
+    private string videoName;
 
+    [SerializeField] Slider percentDownloadingUI;
+    [SerializeField] TMP_Text percentDownloadingText;
+    [SerializeField] AsyncOperationHandle<VideoClip> videoLoaderHandler;
+
+
+    public Dictionary<string, VideoClip> _downloadedClips = new Dictionary<string, VideoClip>();
     #endregion
 
     #region Unity Methods
-    public void Start()
+    void Start()
     {
+        Caching.ClearCache();
         _skyMaterial = RenderSettings.skybox;
+        Debug.Log("Video cache is cleared.");
+
+    }
+
+    void Update()
+    {
+        //Loading slider and UI is updated while it's downloading
+        if (videoLoaderHandler.IsValid() && !videoLoaderHandler.IsDone)
+        {
+            float percent = videoLoaderHandler.GetDownloadStatus().Percent;
+            percentDownloadingUI.value = percent;
+            percentDownloadingText.text = "Downloading   " + Mathf.Round(percent * 100) + "%";
+            Debug.Log(percent);
+        }
     }
 
     #endregion
 
     #region Public Methods
-    
-    /*
-    //For testing playing this locally only for now
 
-    //Loading video using addressables
-    [Button("Play Waterfall video")]
-    public void LoadVideoWaterfall()
+    // Download video using Addressables
+    public void DownloadVideo(string videoAddressableKey)
     {
-        LoadVideo("Waterfall");
-        Debug.Log("Waterfall video loaded.");
-    }
-    */
+        percentDownloadingUI.gameObject.SetActive(true);
+        percentDownloadingText.gameObject.SetActive(true);
 
-    //Loading video using addressables
-    [Button("Play Pond video")]
-    public void LoadVideoPond()
-    {
-        LoadVideo("Pond");
-        Debug.Log("Pond video loaded.");
-    }
-
-
-    //For testing playing this locally only for now
-
-    [Button("Play Waterfall video")]
-    public void PlayVideoWaterfall()
-    {
-        PlayVideo("Waterfall");
-        Debug.Log("Waterfall video is being played.");
-
-    }
-
-    [Button("Pause Video")]
-    public void PauseVideo()
-    {
-        videoPlayer.Pause();
-        Debug.Log("Video is paused.");
-
-    }
-
-    #endregion
-
-    #region Private Methods
-
-    //Play locally
-    private void PlayVideo(string videoClipName)
-    {
-        VideoClip clipToPlay = FindVideoClip(videoClipName);
-        if (clipToPlay != null)
+        if (_downloadedClips.ContainsKey(videoAddressableKey))
         {
-                videoPlayer.clip = clipToPlay;
-                videoPlayer.Play();
+            Debug.Log("Video with key " + videoAddressableKey + " is already downloaded.");
+            return;
         }
-        else
-        {
-            Debug.LogWarning("Video clip with name " + videoClipName + " not found!");
-        }
-    }
 
-    //Loading video using addressables
-    private void LoadVideo(string videoAddressableKey)
-    {
-        AsyncOperationHandle<VideoClip> handle = Addressables.LoadAssetAsync<VideoClip>(videoAddressableKey);
+        //Download the video
+        videoLoaderHandler = Addressables.LoadAssetAsync<VideoClip>(videoAddressableKey);
 
-        handle.Completed += (op) =>
+        //When it's downloaded
+        videoLoaderHandler.Completed += (op) =>
         {
+
+            percentDownloadingUI.gameObject.SetActive(false);
+            percentDownloadingText.gameObject.SetActive(false);
+
             if (op.Status == AsyncOperationStatus.Succeeded)
             {
-                VideoClip videoClip = op.Result;
-                videoPlayer.clip = videoClip;
+                _downloadedClips.Add(videoAddressableKey, op.Result);
+                Debug.Log("Video downloaded successfully: " + videoAddressableKey);
 
-                videoPlayer.Play();
             }
             else
             {
-                Debug.LogError("Failed to load video: " + op.OperationException);
+                Debug.Log("Failed to download video: " + op.OperationException);
             }
         };
     }
 
-    private VideoClip FindVideoClip(string clipName)
+    // Play video by addressable key from cache
+    public void PlayVideo(string videoAddressableKey)
     {
-        return Resources.Load<VideoClip>(clipName);
+        if (_downloadedClips.ContainsKey(videoAddressableKey))
+        {
+            VideoClip clipToPlay = _downloadedClips[videoAddressableKey];
+            videoPlayer.clip = clipToPlay;
+            videoPlayer.Play();
+        }
+        else
+        {
+            Debug.Log("Video with key " + videoAddressableKey + " not found!");
+        }
     }
-
+    
     #endregion
-
 }

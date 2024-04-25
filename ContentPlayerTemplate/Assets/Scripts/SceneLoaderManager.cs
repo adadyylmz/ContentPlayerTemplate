@@ -4,64 +4,134 @@ using NaughtyAttributes;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Cysharp.Threading.Tasks;
+using UnityEngine.UI;
+using TMPro;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.ResourceManagement.ResourceProviders;
+using UnityEngine.ResourceManagement.ResourceLocations;
+
 public class SceneLoaderManager : MonoBehaviour
 {
+   
     #region Fields
 
-    //[SerializeField] private AssetReference LobbyScene;
-    [SerializeField] private AssetReference TestScene;
-    [SerializeField] private AssetReference XRDemoScene;
-    [SerializeField] private AssetReference ParkourGameScene;
+    [SerializeField] Slider percentDownloadingUI;
+    [SerializeField] TMP_Text percentDownloadingText;
+
     [SerializeField] AsyncOperationHandle<SceneInstance> _sceneLoaderHandler;
+    [SerializeField] public Dictionary<string, SceneInstance> _downloadedScenes = new Dictionary<string, SceneInstance>();
+
+
+    #endregion
+
+    #region Unity Methods
+    void Start()
+    {
+        Caching.ClearCache();
+        Debug.Log("Scene cache is cleared.");
+    }
+
+    void Update()
+    {
+        if (_sceneLoaderHandler.IsValid())
+        {
+            float percent = _sceneLoaderHandler.GetDownloadStatus().Percent;
+            if (percent < 1)
+            {
+                percentDownloadingUI.value = percent;
+                percentDownloadingText.text = "Downloading   " + percent * 100 + "%";
+                Debug.Log(percent);
+            }
+
+        }
+    }
 
     #endregion
 
     #region Public Methods
 
-
-    [Button("Load XR Demo Scene")]
-    public async void LoadXRDemoScene()
+    // Downloading the scene without scene activation
+    public async UniTask DownloadScene(AssetReference sceneKey)
     {
-        await LoadAddressableScene(XRDemoScene);
-        Debug.Log("XR Demo scene loaded remotely.");
+        bool isInCache = await Addressables.GetDownloadSizeAsync(sceneKey) == 0;
+        if (!isInCache)
+        {
+            string sceneReference = sceneKey.RuntimeKey.ToString();
 
+            percentDownloadingUI.gameObject.SetActive(true);
+            percentDownloadingText.gameObject.SetActive(true);
+
+            _sceneLoaderHandler = Addressables.LoadSceneAsync(sceneKey, LoadSceneMode.Single, false, 100);
+
+            _sceneLoaderHandler.Completed += (op) =>
+            {
+                if (op.Status == AsyncOperationStatus.Succeeded)
+                {
+                    _downloadedScenes.Add(sceneReference, op.Result);
+                    Debug.Log("Scene downloaded successfully: " + sceneKey);
+                }
+                else
+                {
+                    Debug.Log("Failed to download video: " + op.OperationException);
+                }
+            };
+
+            await _sceneLoaderHandler.Task;
+
+            percentDownloadingUI.gameObject.SetActive(false);
+            percentDownloadingText.gameObject.SetActive(false);
+
+            Debug.Log("Addressable scene downloaded");
+        }
+        else
+        {
+            Debug.Log("Scene is already in cache!");
+        }
     }
 
-    
-    //Test scene is causing error: unknown
-    [Button("Load Test Scene")]
-    public async void LoadTestScene()
+    // Loading the scene using scenekey
+    public async UniTask LoadScene(AssetReference sceneKey)
     {
-        await LoadAddressableScene(TestScene);
-        Debug.Log("Empty scene loaded remotely.");
+        bool isCached = await IsSceneCached(sceneKey);
+        // Checking if the scene is downloaded
+        if (isCached)
+        {
+            // Loading the scene
+            _sceneLoaderHandler = Addressables.LoadSceneAsync(sceneKey, LoadSceneMode.Single, true, 100);
 
+            _sceneLoaderHandler.Completed += (op) =>
+            {
+                if (op.Status == AsyncOperationStatus.Succeeded)
+                {            
+                    Debug.Log("Scene with key " + sceneKey + " loaded.");
+                }
+                else
+                {
+                    Debug.LogError("Scene with key " + sceneKey + " is downloaded but failed to load.");
+                }
+            };
+        }
+        else
+        {
+            Debug.LogError("Scene with key " + sceneKey + " is not downloaded.");
+        }   
     }
-    
-
-    [Button("Load Parkour Game Scene")]
-    public async void LoadParkourGameScene()
+   
+    public async UniTask<bool> IsSceneCached(AssetReference sceneKey)
     {
-        await LoadAddressableScene(ParkourGameScene);
-        Debug.Log("Parkour game scene loaded remotely.");
+        long downloadSize = await GetSceneDownloadSize(sceneKey);
+        return downloadSize == 0;
     }
 
-    [Button("Return to Lobby")]
-    public void LoadLobbyScene()
+    public async UniTask<long> GetSceneDownloadSize(AssetReference sceneKey)
     {
-        SceneManager.LoadScene("LobbyScene");
-        Debug.Log("Returned to lobby.");
+        AsyncOperationHandle<long> downloadSizeHandle = Addressables.GetDownloadSizeAsync(sceneKey);
+        await downloadSizeHandle.Task;
+        return downloadSizeHandle.Result;
     }
 
-    #endregion
-
-    #region Private Methods
-    private async UniTask LoadAddressableScene(AssetReference sceneKey)
-    {
-        _sceneLoaderHandler = Addressables.LoadSceneAsync(sceneKey, LoadSceneMode.Single);
-        await _sceneLoaderHandler.Task;
-        Debug.Log("Addrassable scene loaded");
-
-    }
     #endregion
 }
+
+
