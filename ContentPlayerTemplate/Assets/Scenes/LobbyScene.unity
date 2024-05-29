@@ -1425,11 +1425,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: XR Rig_A
       objectReference: {fileID: 0}
-    - target: {fileID: 7663181128207552973, guid: 0d8d5b630fe3b2740af9463e8943ff2d,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7663181128207552975, guid: 0d8d5b630fe3b2740af9463e8943ff2d,
         type: 3}
       propertyPath: m_RootOrder

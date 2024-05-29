@@ -37,12 +37,22 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 1437919140996070780, guid: 6f016306a3b0f414ba9515d86e8d9784,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1459378844621583520, guid: 6f016306a3b0f414ba9515d86e8d9784,
         type: 3}
       propertyPath: GroundedLayers.m_Bits
       value: 1281
       objectReference: {fileID: 0}
     - target: {fileID: 1605805082383388041, guid: 6f016306a3b0f414ba9515d86e8d9784,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2774565018968443012, guid: 6f016306a3b0f414ba9515d86e8d9784,
         type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -85,22 +95,22 @@ PrefabInstance:
     - target: {fileID: 3565831769698299882, guid: 6f016306a3b0f414ba9515d86e8d9784,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.98646206
       objectReference: {fileID: 0}
     - target: {fileID: 3565831769698299882, guid: 6f016306a3b0f414ba9515d86e8d9784,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3565831769698299882, guid: 6f016306a3b0f414ba9515d86e8d9784,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.1639901
       objectReference: {fileID: 0}
     - target: {fileID: 3565831769698299882, guid: 6f016306a3b0f414ba9515d86e8d9784,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3565831769698299882, guid: 6f016306a3b0f414ba9515d86e8d9784,
         type: 3}
@@ -110,7 +120,7 @@ PrefabInstance:
     - target: {fileID: 3565831769698299882, guid: 6f016306a3b0f414ba9515d86e8d9784,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 18.877
       objectReference: {fileID: 0}
     - target: {fileID: 3565831769698299882, guid: 6f016306a3b0f414ba9515d86e8d9784,
         type: 3}
@@ -135,7 +145,7 @@ PrefabInstance:
     - target: {fileID: 6836845849558417558, guid: 6f016306a3b0f414ba9515d86e8d9784,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6957089491882148390, guid: 6f016306a3b0f414ba9515d86e8d9784,
         type: 3}
