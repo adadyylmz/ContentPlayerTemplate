@@ -1019,9 +1019,29 @@ PrefabInstance:
       objectReference: {fileID: 658472785687899314}
     - target: {fileID: 1243279794960274063, guid: feb8e84f10048564dae1ea39b4b5e8b2,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243279794960274063, guid: feb8e84f10048564dae1ea39b4b5e8b2,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243279794960274063, guid: feb8e84f10048564dae1ea39b4b5e8b2,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1845957601}
+    - target: {fileID: 1243279794960274063, guid: feb8e84f10048564dae1ea39b4b5e8b2,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1243279794960274063, guid: feb8e84f10048564dae1ea39b4b5e8b2,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: TestManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 8331947067016542862, guid: feb8e84f10048564dae1ea39b4b5e8b2,
         type: 3}
       propertyPath: m_Name
