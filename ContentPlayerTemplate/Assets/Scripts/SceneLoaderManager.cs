@@ -43,7 +43,6 @@ public class SceneLoaderManager : MonoBehaviour
                 percentDownloadingText.text = "Downloading   " + percent * 100 + "%";
                 Debug.Log(percent);
             }
-
         }
     }
 

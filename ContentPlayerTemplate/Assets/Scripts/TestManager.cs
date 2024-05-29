@@ -63,6 +63,13 @@ public class TestManager : MonoBehaviour
         videoManager.videoPlayer.Pause();
     }
 
+    [Button("Stop video")]
+    public void StopVideo()
+    {
+        videoManager.videoPlayer.Stop();
+        videoManager.ClearRenderTexture(videoManager.yourRenderTexture);
+    }
+
     #endregion
 
     #region Scene Buttons
