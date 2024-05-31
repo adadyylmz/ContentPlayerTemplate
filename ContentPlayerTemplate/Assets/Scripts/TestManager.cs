@@ -6,7 +6,6 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class TestManager : MonoBehaviour
@@ -14,106 +13,54 @@ public class TestManager : MonoBehaviour
     public VideoPlayerManager videoManager;
     public SceneLoaderManager sceneManager;
 
-
-    [SerializeField] private AssetReference TestScene;
-    [SerializeField] private AssetReference XRDemoScene;
-    [SerializeField] private AssetReference ParkourGameScene;
-
-    #region Video Buttons
-
-    [Button("Download Pond Video")]
-    public void DownloadPondVideo()
+    [System.Serializable]
+    public struct VideoButton
     {
-        videoManager.DownloadVideo("Pond");
-    }
-    
-    [Button("Play Pond Video")]
-    public void PlayPondVideo()
-    {
-        videoManager.PlayVideo("Pond");
+        public string videoName;
+        public Button button;
+        public Text buttonText;
     }
 
-    [Button("Download Waterfall video")]
-    public void DownloadWaterfallVideo()
+    [System.Serializable]
+    public struct SceneButton
     {
-        videoManager.DownloadVideo("Waterfall");
+        public AssetReference sceneReference;
+        public Button button;
+        public Text buttonText;
     }
 
-    [Button("Play Waterfall video")]
-    public void PlayWaterfallVideo()
+    public List<VideoButton> videoButtons;
+    public List<SceneButton> sceneButtons;
+
+    private void Start()
     {
-        videoManager.PlayVideo("Waterfall");
+        InitializeVideoButtons();
+        InitializeSceneButtons();
     }
 
-    [Button("Download My360Video")]
-    public void DownloadMyVideo()
+    private void InitializeVideoButtons()
     {
-        videoManager.DownloadVideo("My360Video");
+        foreach (var videoButton in videoButtons)
+        {
+            videoManager.HandleVideoButton(videoButton.videoName, videoButton.button, videoButton.buttonText);
+        }
     }
 
-    [Button("Play My360Video")]
-    public void PlayMyVideo()
+    private void InitializeSceneButtons()
     {
-        videoManager.PlayVideo("My360Video");
+        foreach (var sceneButton in sceneButtons)
+        {
+            sceneManager.HandleSceneButton(sceneButton.sceneReference, sceneButton.button, sceneButton.buttonText);
+        }
     }
-
-    [Button("Pause Video")]
-    public void PauseVideo()
-    {
-        videoManager.videoPlayer.Pause();
-    }
-
-    [Button("Stop video")]
-    public void StopVideo()
-    {
-        videoManager.videoPlayer.Stop();
-        videoManager.ClearRenderTexture(videoManager.yourRenderTexture);
-    }
-
-    #endregion
 
     #region Scene Buttons
-
-    [Button("Download XR Demo Scene")]
-    public async void DownloadXRDemoScene()
-    {
-        await sceneManager.DownloadScene(XRDemoScene);
-    }
-
-    [Button("Load XR Demo Scene")]
-    public async void LoadXRDemoScene()
-    {
-       await sceneManager.LoadScene(XRDemoScene);
-    }
-
-    [Button("Download Test Scene")]
-    public async void DownloadTestScene()
-    {
-        await sceneManager.DownloadScene(TestScene);
-    }
-
-    [Button("Load Test Scene")]
-    public async void LoadTestScene()
-    {
-         await sceneManager.LoadScene(TestScene);
-    }
-
-    [Button("Download Parkour Game Scene")]
-    public async void DownloadParkourGameScene()
-    {
-        await sceneManager.DownloadScene(ParkourGameScene);
-    }
-
-    [Button("Load Parkour Game Scene")]
-    public async void LoadParkourGameScene()
-    {
-         await sceneManager.LoadScene(ParkourGameScene);
-    }
 
     [Button("Return to Lobby")]
     public void LoadLobbyScene()
     {
         SceneManager.LoadScene("LobbyScene");
     }
+
     #endregion
 }

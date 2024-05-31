@@ -6,14 +6,11 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.ResourceManagement.ResourceProviders;
-using UnityEngine.ResourceManagement.ResourceLocations;
 
 public class SceneLoaderManager : MonoBehaviour
 {
-   
     #region Fields
 
     [SerializeField] Slider percentDownloadingUI;
@@ -22,10 +19,10 @@ public class SceneLoaderManager : MonoBehaviour
     [SerializeField] AsyncOperationHandle<SceneInstance> _sceneLoaderHandler;
     [SerializeField] public Dictionary<string, SceneInstance> _downloadedScenes = new Dictionary<string, SceneInstance>();
 
-
     #endregion
 
     #region Unity Methods
+
     void Start()
     {
         Caching.ClearCache();
@@ -40,7 +37,7 @@ public class SceneLoaderManager : MonoBehaviour
             if (percent < 1)
             {
                 percentDownloadingUI.value = percent;
-                percentDownloadingText.text = "Downloading   " + percent * 100 + "%";
+                percentDownloadingText.text = "Downloading " + percent * 100 + "%";
                 Debug.Log(percent);
             }
         }
@@ -72,7 +69,7 @@ public class SceneLoaderManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Failed to download video: " + op.OperationException);
+                    Debug.Log("Failed to download scene: " + op.OperationException);
                 }
             };
 
@@ -93,16 +90,14 @@ public class SceneLoaderManager : MonoBehaviour
     public async UniTask LoadScene(AssetReference sceneKey)
     {
         bool isCached = await IsSceneCached(sceneKey);
-        // Checking if the scene is downloaded
         if (isCached)
         {
-            // Loading the scene
             _sceneLoaderHandler = Addressables.LoadSceneAsync(sceneKey, LoadSceneMode.Single, true, 100);
 
             _sceneLoaderHandler.Completed += (op) =>
             {
                 if (op.Status == AsyncOperationStatus.Succeeded)
-                {            
+                {
                     Debug.Log("Scene with key " + sceneKey + " loaded.");
                 }
                 else
@@ -114,9 +109,9 @@ public class SceneLoaderManager : MonoBehaviour
         else
         {
             Debug.LogError("Scene with key " + sceneKey + " is not downloaded.");
-        }   
+        }
     }
-   
+
     public async UniTask<bool> IsSceneCached(AssetReference sceneKey)
     {
         long downloadSize = await GetSceneDownloadSize(sceneKey);
@@ -130,7 +125,21 @@ public class SceneLoaderManager : MonoBehaviour
         return downloadSizeHandle.Result;
     }
 
+    public void HandleSceneButton(AssetReference sceneKey, Button button, Text buttonText)
+    {
+        button.onClick.AddListener(async () =>
+        {
+            if (_downloadedScenes.ContainsKey(sceneKey.RuntimeKey.ToString()))
+            {
+                await LoadScene(sceneKey);
+            }
+            else
+            {
+                await DownloadScene(sceneKey);
+                buttonText.text = $"Play {sceneKey.SubObjectName} Scene";
+            }
+        });
+    }
+
     #endregion
 }
-
-

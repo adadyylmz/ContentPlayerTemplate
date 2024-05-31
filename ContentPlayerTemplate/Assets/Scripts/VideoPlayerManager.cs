@@ -20,6 +20,10 @@ public class VideoPlayerManager : MonoBehaviour
     [SerializeField] AsyncOperationHandle<VideoClip> videoLoaderHandler;
 
     public Dictionary<string, VideoClip> _downloadedClips = new Dictionary<string, VideoClip>();
+
+    // A dictionary to hold buttons and their text components
+    private Dictionary<string, (Button, Text)> videoButtons = new Dictionary<string, (Button, Text)>();
+
     #endregion
 
     #region Unity Methods
@@ -52,8 +56,33 @@ public class VideoPlayerManager : MonoBehaviour
 
     #region Public Methods
 
+    // General method to handle video download and button update
+    public void HandleVideoButton(string videoName, Button button, Text buttonText)
+    {
+        if (_downloadedClips.ContainsKey(videoName))
+        {
+            // If the video is already downloaded, set the button to play the video
+            buttonText.text = $"Play {videoName} video";
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => PlayVideo(videoName));
+        }
+        else
+        {
+            // If the video is not downloaded, set the button to download the video
+            buttonText.text = $"Download {videoName} video";
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => DownloadVideo(videoName, button, buttonText));
+        }
+
+        // Store button and text reference in the dictionary
+        if (!videoButtons.ContainsKey(videoName))
+        {
+            videoButtons.Add(videoName, (button, buttonText));
+        }
+    }
+
     // Download video using Addressables
-    public void DownloadVideo(string videoAddressableKey)
+    public void DownloadVideo(string videoAddressableKey, Button button, Text buttonText)
     {
         percentDownloadingUI.gameObject.SetActive(true);
         percentDownloadingText.gameObject.SetActive(true);
@@ -77,6 +106,13 @@ public class VideoPlayerManager : MonoBehaviour
             {
                 _downloadedClips.Add(videoAddressableKey, op.Result);
                 Debug.Log("Video downloaded successfully: " + videoAddressableKey);
+
+                // Change button text to "Play ${videoName} video"
+                buttonText.text = $"Play {videoAddressableKey} video";
+
+                // Update button functionality to play the video
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(() => PlayVideo(videoAddressableKey));
             }
             else
             {
@@ -106,6 +142,7 @@ public class VideoPlayerManager : MonoBehaviour
         videoPlayer.Stop();
         ClearRenderTexture(yourRenderTexture);
     }
+
     public void PauseVideo()
     {
         videoPlayer.Pause();
