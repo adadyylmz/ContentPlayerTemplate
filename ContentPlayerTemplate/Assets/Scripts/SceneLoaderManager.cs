@@ -6,22 +6,53 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.ResourceManagement.ResourceProviders;
+using UnityEngine.ResourceManagement.ResourceLocations;
+using UnityEngine.EventSystems;
 
 public class SceneLoaderManager : MonoBehaviour
 {
+    //public static SceneLoaderManager Instance { get; private set; }
+
     #region Fields
 
     [SerializeField] Slider percentDownloadingUI;
     [SerializeField] TMP_Text percentDownloadingText;
+    //[SerializeField] EventSystem eventSystem;
 
     [SerializeField] AsyncOperationHandle<SceneInstance> _sceneLoaderHandler;
     [SerializeField] public Dictionary<string, SceneInstance> _downloadedScenes = new Dictionary<string, SceneInstance>();
 
+    // A dictionary to hold buttons and their text components
+    private Dictionary<string, (Button, Text)> sceneButtons = new Dictionary<string, (Button, Text)>();
+
     #endregion
 
     #region Unity Methods
+
+    /*
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+    */
+
+    /*
+     void Awake()
+     {
+         DontDestroyOnLoad(eventSystem);
+     }
+    */
 
     void Start()
     {
@@ -37,7 +68,7 @@ public class SceneLoaderManager : MonoBehaviour
             if (percent < 1)
             {
                 percentDownloadingUI.value = percent;
-                percentDownloadingText.text = "Downloading " + percent * 100 + "%";
+                percentDownloadingText.text = "Downloading   " + percent * 100 + "%";
                 Debug.Log(percent);
             }
         }
@@ -47,8 +78,33 @@ public class SceneLoaderManager : MonoBehaviour
 
     #region Public Methods
 
+    // General method to handle scene download and button update
+    public void HandleSceneButton(AssetReference sceneKey, Button button, Text buttonText, string sceneName)
+    {
+        if (_downloadedScenes.ContainsKey(sceneKey.RuntimeKey.ToString()))
+        {
+            // If the scene is already downloaded, set the button to load the scene
+            buttonText.text = $"Play {sceneName} scene";
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => LoadScene(sceneKey));
+        }
+        else
+        {
+            // If the scene is not downloaded, set the button to download the scene
+            buttonText.text = $"Download {sceneName} scene";
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => DownloadScene(sceneKey, button, buttonText, sceneName));
+        }
+
+        // Store button and text reference in the dictionary
+        if (!sceneButtons.ContainsKey(sceneKey.RuntimeKey.ToString()))
+        {
+            sceneButtons.Add(sceneKey.RuntimeKey.ToString(), (button, buttonText));
+        }
+    }
+
     // Downloading the scene without scene activation
-    public async UniTask DownloadScene(AssetReference sceneKey)
+    public async void DownloadScene(AssetReference sceneKey, Button button, Text buttonText, string sceneName)
     {
         bool isInCache = await Addressables.GetDownloadSizeAsync(sceneKey) == 0;
         if (!isInCache)
@@ -66,10 +122,17 @@ public class SceneLoaderManager : MonoBehaviour
                 {
                     _downloadedScenes.Add(sceneReference, op.Result);
                     Debug.Log("Scene downloaded successfully: " + sceneKey);
+
+                    // Change button text to "Play ${sceneName} scene"
+                    buttonText.text = $"Play {sceneName} scene";
+
+                    // Update button functionality to load the scene
+                    button.onClick.RemoveAllListeners();
+                    button.onClick.AddListener(() => LoadScene(sceneKey));
                 }
                 else
                 {
-                    Debug.Log("Failed to download scene: " + op.OperationException);
+                    Debug.Log("Failed to download video: " + op.OperationException);
                 }
             };
 
@@ -87,11 +150,13 @@ public class SceneLoaderManager : MonoBehaviour
     }
 
     // Loading the scene using scenekey
-    public async UniTask LoadScene(AssetReference sceneKey)
+    public async void LoadScene(AssetReference sceneKey)
     {
         bool isCached = await IsSceneCached(sceneKey);
+        // Checking if the scene is downloaded
         if (isCached)
         {
+            // Loading the scene
             _sceneLoaderHandler = Addressables.LoadSceneAsync(sceneKey, LoadSceneMode.Single, true, 100);
 
             _sceneLoaderHandler.Completed += (op) =>
@@ -125,21 +190,39 @@ public class SceneLoaderManager : MonoBehaviour
         return downloadSizeHandle.Result;
     }
 
-    public void HandleSceneButton(AssetReference sceneKey, Button button, Text buttonText)
+    /*
+    // Method to load the Lobby Scene
+    public void LoadLobbyScene()
     {
-        button.onClick.AddListener(async () =>
+        if (SceneManager.GetActiveScene().name != "LobbyScene")
         {
-            if (_downloadedScenes.ContainsKey(sceneKey.RuntimeKey.ToString()))
-            {
-                await LoadScene(sceneKey);
-            }
-            else
-            {
-                await DownloadScene(sceneKey);
-                buttonText.text = $"Play {sceneKey.SubObjectName} Scene";
-            }
-        });
+            SceneManager.LoadScene("LobbyScene");
+            //set the skybox to RT_360 again
+        }
     }
+    */
+
+    // Load the LobbyScene
+    public void LoadLobbyScene()
+    {
+        StartCoroutine(LoadLobbySceneCoroutine());
+    }
+
+    private IEnumerator LoadLobbySceneCoroutine()
+    {
+        // Clear all DontDestroyOnLoad objects
+        DoNotDestroy.DestroyInstance();
+
+        // Load the Lobby scene
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LobbyScene");
+
+        // Wait until the asynchronous scene fully loads
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
+
 
     #endregion
 }

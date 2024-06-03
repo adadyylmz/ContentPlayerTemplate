@@ -30,9 +30,20 @@ namespace BNG {
         IEnumerator fadeRoutine;
         string faderName = "ScreenFader";
 
+        private static ScreenFader _instance;
 
-        void Awake() {
-            initialize();
+        void Awake()
+        {
+            if (_instance == null)
+            {
+                _instance = this;
+                initialize();
+                DontDestroyOnLoad(gameObject);
+            }
+            else if (_instance != this)
+            {
+                Destroy(gameObject);
+            }
         }
 
         protected virtual void initialize() {

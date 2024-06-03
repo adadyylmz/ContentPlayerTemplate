@@ -62,6 +62,7 @@ namespace BNG {
                         // Check for existing event system
                         EventSystem eventSystem = EventSystem.current;
                         if(eventSystem == null) {
+                            Debug.Log("the event system was null so it was recreated.");
                             eventSystem = new GameObject("EventSystem").AddComponent<EventSystem>(); ;
                         }                        
 
@@ -294,12 +295,27 @@ namespace BNG {
             ReleasingObject = releasing;
         }
 
-        public virtual void AssignCameraToAllCanvases(Camera cam) {
+        public virtual void AssignCameraToAllCanvases(Camera cam)
+        {
+            if (cam == null)
+            {
+                cam = Camera.main; // Fallback to the main camera if cam is null
+            }
+
             Canvas[] allCanvas = FindObjectsOfType<Canvas>();
-            for (int x = 0; x < allCanvas.Length; x++) {
+            for (int x = 0; x < allCanvas.Length; x++)
+            {
                 AddCanvasToCamera(allCanvas[x], cam);
             }
         }
+
+        public void ReinitializeCamera()
+        {
+            cameraCaster = FindObjectOfType<Camera>();
+            AssignCameraToAllCanvases(cameraCaster);
+        }
+
+
 
         public virtual void AddCanvas(Canvas canvas) {
 #if XRIT_INTEGRATION

@@ -148,11 +148,6 @@ public class VideoPlayerManager : MonoBehaviour
         videoPlayer.Pause();
     }
 
-    public void ReturnToLobby()
-    {
-        SceneManager.LoadScene("LobbyScene");
-    }
-
     // Clear the render texture
     public void ClearRenderTexture(RenderTexture rt)
     {
