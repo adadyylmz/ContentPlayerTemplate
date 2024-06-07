@@ -20,7 +20,6 @@ public class SceneLoaderManager : MonoBehaviour
 
     [SerializeField] Slider percentDownloadingUI;
     [SerializeField] TMP_Text percentDownloadingText;
-    //[SerializeField] EventSystem eventSystem;
 
     [SerializeField] AsyncOperationHandle<SceneInstance> _sceneLoaderHandler;
     [SerializeField] public Dictionary<string, SceneInstance> _downloadedScenes = new Dictionary<string, SceneInstance>();
@@ -31,28 +30,6 @@ public class SceneLoaderManager : MonoBehaviour
     #endregion
 
     #region Unity Methods
-
-    /*
-    void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }
-    }
-    */
-
-    /*
-     void Awake()
-     {
-         DontDestroyOnLoad(eventSystem);
-     }
-    */
 
     void Start()
     {
@@ -190,39 +167,11 @@ public class SceneLoaderManager : MonoBehaviour
         return downloadSizeHandle.Result;
     }
 
-    /*
-    // Method to load the Lobby Scene
-    public void LoadLobbyScene()
-    {
-        if (SceneManager.GetActiveScene().name != "LobbyScene")
-        {
-            SceneManager.LoadScene("LobbyScene");
-            //set the skybox to RT_360 again
-        }
-    }
-    */
-
     // Load the LobbyScene
     public void LoadLobbyScene()
     {
-        StartCoroutine(LoadLobbySceneCoroutine());
+        SceneManager.LoadSceneAsync("LobbyScene");
     }
-
-    private IEnumerator LoadLobbySceneCoroutine()
-    {
-        // Clear all DontDestroyOnLoad objects
-        DoNotDestroy.DestroyInstance();
-
-        // Load the Lobby scene
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("LobbyScene");
-
-        // Wait until the asynchronous scene fully loads
-        while (!asyncLoad.isDone)
-        {
-            yield return null;
-        }
-    }
-
 
     #endregion
 }
