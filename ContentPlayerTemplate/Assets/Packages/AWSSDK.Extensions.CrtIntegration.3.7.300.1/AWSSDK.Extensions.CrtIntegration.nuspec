@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>AWSSDK.Extensions.CrtIntegration</id>
+    <version>3.7.300.1</version>
+    <title>AWSSDK - Extensions for AWS Common Runtime Integration</title>
+    <authors>Amazon Web Services</authors>
+    <owners>Amazon Web Services</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">Apache-2.0</license>
+    <licenseUrl>https://licenses.nuget.org/Apache-2.0</licenseUrl>
+    <icon>images\AWSLogo.png</icon>
+    <projectUrl>https://github.com/aws/aws-sdk-net/</projectUrl>
+    <description>Extensions for the AWS SDK for .NET to integrate with the AWS Common Runtime</description>
+    <language>en-US</language>
+    <tags>AWS Amazon aws-sdk-v3</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework3.5">
+        <dependency id="AWSSDK.Core" version="3.7.300" />
+        <dependency id="AWSCRT-AUTH" version="0.4.4" />
+        <dependency id="AWSCRT-CHECKSUMS" version="0.4.4" />
+      </group>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="AWSSDK.Core" version="3.7.300" />
+        <dependency id="AWSCRT-AUTH" version="0.4.4" />
+        <dependency id="AWSCRT-CHECKSUMS" version="0.4.4" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="AWSSDK.Core" version="3.7.300" />
+        <dependency id="AWSCRT-AUTH" version="0.4.4" />
+        <dependency id="AWSCRT-CHECKSUMS" version="0.4.4" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

@@ -7,7 +7,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-public class VideoPlayerManager : MonoBehaviour
+public class VideoPlayerManager_Addressables : MonoBehaviour
 {
     #region Fields
     public VideoPlayer videoPlayer;
@@ -134,6 +134,13 @@ public class VideoPlayerManager : MonoBehaviour
         {
             Debug.Log("Video with key " + videoAddressableKey + " not found!");
         }
+    }
+
+    public void PlayVideo()
+    {
+        //            videoPlayer.clip = clipToPlay;
+
+        videoPlayer.Play();
     }
 
     // Stop video playback and clear the render texture

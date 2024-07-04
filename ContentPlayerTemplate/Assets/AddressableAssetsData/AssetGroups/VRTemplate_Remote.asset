@@ -16,31 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 943f8a3453e770943bd6c9b79bf9bd5f
-  m_SerializeEntries:
-  - m_GUID: a54286bb4ebd77940ae2618b4f1f32d4
-    m_Address: Pond
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - default
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 44b0cb9c60bff4746a633981b7b855b4
-    m_Address: ParkourGameScene
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - default
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 839e6bd83213655468fd13bcacd2a06a
-    m_Address: XRDemoScene
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - default
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 6243664ca9549b341a568483792f023c
-    m_Address: TestScene
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - default
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 52b7ceb01da812646a28ab8972fc893c, type: 2}
   m_SchemaSet:

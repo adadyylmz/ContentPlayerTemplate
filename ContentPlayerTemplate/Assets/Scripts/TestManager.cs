@@ -9,8 +9,8 @@ using UnityEngine.SceneManagement;
 
 public class TestManager : MonoBehaviour
 {
-    public VideoPlayerManager videoManager;
-    public SceneLoaderManager sceneManager;
+    public VideoPlayerManager_Addressables videoManager;
+    public SceneManager_Addressables sceneManager;
 
     [System.Serializable]
     public struct VideoButton

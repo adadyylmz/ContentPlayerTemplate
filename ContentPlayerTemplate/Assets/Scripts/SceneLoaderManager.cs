@@ -1,170 +1,64 @@
-using UnityEngine.SceneManagement;
-using UnityEngine;
-using NaughtyAttributes;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using Cysharp.Threading.Tasks;
-using UnityEngine.UI;
-using TMPro;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.ResourceManagement.ResourceProviders;
-using UnityEngine.ResourceManagement.ResourceLocations;
-using UnityEngine.EventSystems;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
+using UnityEngine.UI;
+using UnityEditor;
+using System.Linq;
 
 public class SceneLoaderManager : MonoBehaviour
 {
-    //public static SceneLoaderManager Instance { get; private set; }
-
-    #region Fields
-
-    [SerializeField] Slider percentDownloadingUI;
-    [SerializeField] TMP_Text percentDownloadingText;
-
-    [SerializeField] AsyncOperationHandle<SceneInstance> _sceneLoaderHandler;
-    [SerializeField] public Dictionary<string, SceneInstance> _downloadedScenes = new Dictionary<string, SceneInstance>();
-
-    // A dictionary to hold buttons and their text components
-    private Dictionary<string, (Button, Text)> sceneButtons = new Dictionary<string, (Button, Text)>();
-
-    #endregion
-
-    #region Unity Methods
+    public DownloadManager downloadManager;
+    public GameObject xrRig; // Reference to the XRRig in the LobbyScene
+    public TMP_Dropdown filesDropdown; // Reference to the Dropdown element for listing files
+    public Button loadSceneButton; // Reference to the Load Scene button
 
     void Start()
     {
-        Caching.ClearCache();
-        Debug.Log("Scene cache is cleared.");
+        // Add listener for the Load Scene button
+        loadSceneButton.onClick.AddListener(OnFileSelected);
     }
 
     void Update()
     {
-        if (_sceneLoaderHandler.IsValid())
+
+    }
+
+    private void OnFileSelected()
+    {
+        string selectedFile = filesDropdown.options[filesDropdown.value].text;
+
+        if (selectedFile.EndsWith("_VRS.unity"))
         {
-            float percent = _sceneLoaderHandler.GetDownloadStatus().Percent;
-            if (percent < 1)
-            {
-                percentDownloadingUI.value = percent;
-                percentDownloadingText.text = "Downloading   " + percent * 100 + "%";
-                Debug.Log(percent);
-            }
+            LoadVRReadyScene(selectedFile);
+        }
+        else if (selectedFile.EndsWith(".unity"))
+        {
+            LoadNotVRScene(selectedFile);
         }
     }
 
-    #endregion
-
-    #region Public Methods
-
-    // General method to handle scene download and button update
-    public void HandleSceneButton(AssetReference sceneKey, Button button, Text buttonText, string sceneName)
+    public void LoadVRReadyScene(string sceneName)
     {
-        if (_downloadedScenes.ContainsKey(sceneKey.RuntimeKey.ToString()))
+        // Disable the XRRig in the LobbyScene
+        if (xrRig != null)
         {
-            // If the scene is already downloaded, set the button to load the scene
-            buttonText.text = $"Play {sceneName} scene";
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(() => LoadScene(sceneKey));
+            xrRig.SetActive(false);
         }
-        else
-        {
-            // If the scene is not downloaded, set the button to download the scene
-            buttonText.text = $"Download {sceneName} scene";
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(() => DownloadScene(sceneKey, button, buttonText, sceneName));
-        }
-
-        // Store button and text reference in the dictionary
-        if (!sceneButtons.ContainsKey(sceneKey.RuntimeKey.ToString()))
-        {
-            sceneButtons.Add(sceneKey.RuntimeKey.ToString(), (button, buttonText));
-        }
+        // Load the selected scene
+        StartCoroutine(AddAndLoadSceneAsync(sceneName));
     }
 
-    // Downloading the scene without scene activation
-    public async void DownloadScene(AssetReference sceneKey, Button button, Text buttonText, string sceneName)
+    public void LoadNotVRScene(string sceneName)
     {
-        bool isInCache = await Addressables.GetDownloadSizeAsync(sceneKey) == 0;
-        if (!isInCache)
+        // Ensure the XRRig in the LobbyScene is active
+        if (xrRig != null)
         {
-            string sceneReference = sceneKey.RuntimeKey.ToString();
-
-            percentDownloadingUI.gameObject.SetActive(true);
-            percentDownloadingText.gameObject.SetActive(true);
-
-            _sceneLoaderHandler = Addressables.LoadSceneAsync(sceneKey, LoadSceneMode.Single, false, 100);
-
-            _sceneLoaderHandler.Completed += (op) =>
-            {
-                if (op.Status == AsyncOperationStatus.Succeeded)
-                {
-                    _downloadedScenes.Add(sceneReference, op.Result);
-                    Debug.Log("Scene downloaded successfully: " + sceneKey);
-
-                    // Change button text to "Play ${sceneName} scene"
-                    buttonText.text = $"Play {sceneName} scene";
-
-                    // Update button functionality to load the scene
-                    button.onClick.RemoveAllListeners();
-                    button.onClick.AddListener(() => LoadScene(sceneKey));
-                }
-                else
-                {
-                    Debug.Log("Failed to download video: " + op.OperationException);
-                }
-            };
-
-            await _sceneLoaderHandler.Task;
-
-            percentDownloadingUI.gameObject.SetActive(false);
-            percentDownloadingText.gameObject.SetActive(false);
-
-            Debug.Log("Addressable scene downloaded");
+            xrRig.SetActive(true);
         }
-        else
-        {
-            Debug.Log("Scene is already in cache!");
-        }
-    }
-
-    // Loading the scene using scenekey
-    public async void LoadScene(AssetReference sceneKey)
-    {
-        bool isCached = await IsSceneCached(sceneKey);
-        // Checking if the scene is downloaded
-        if (isCached)
-        {
-            // Loading the scene
-            _sceneLoaderHandler = Addressables.LoadSceneAsync(sceneKey, LoadSceneMode.Single, true, 100);
-
-            _sceneLoaderHandler.Completed += (op) =>
-            {
-                if (op.Status == AsyncOperationStatus.Succeeded)
-                {
-                    Debug.Log("Scene with key " + sceneKey + " loaded.");
-                }
-                else
-                {
-                    Debug.LogError("Scene with key " + sceneKey + " is downloaded but failed to load.");
-                }
-            };
-        }
-        else
-        {
-            Debug.LogError("Scene with key " + sceneKey + " is not downloaded.");
-        }
-    }
-
-    public async UniTask<bool> IsSceneCached(AssetReference sceneKey)
-    {
-        long downloadSize = await GetSceneDownloadSize(sceneKey);
-        return downloadSize == 0;
-    }
-
-    public async UniTask<long> GetSceneDownloadSize(AssetReference sceneKey)
-    {
-        AsyncOperationHandle<long> downloadSizeHandle = Addressables.GetDownloadSizeAsync(sceneKey);
-        await downloadSizeHandle.Task;
-        return downloadSizeHandle.Result;
+        // Load the selected scene
+        StartCoroutine(AddAndLoadSceneAsync(sceneName));
     }
 
     // Load the LobbyScene
@@ -173,5 +67,54 @@ public class SceneLoaderManager : MonoBehaviour
         SceneManager.LoadSceneAsync("LobbyScene");
     }
 
-    #endregion
+    private IEnumerator AddAndLoadSceneAsync(string sceneName)
+    {
+        // Add the scene to the build settings
+        AddSceneToBuildSettings(sceneName);
+
+        // Ensure the scene is in the build settings
+        string scenePath = System.IO.Path.Combine("Assets/DownloadedFiles", sceneName);
+        if (!IsSceneInBuildSettings(scenePath))
+        {
+            Debug.LogError("Scene " + scenePath + " is not in build settings.");
+            yield break;
+        }
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(scenePath);
+
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
+
+    private void AddSceneToBuildSettings(string sceneName)
+    {
+        string scenePath = System.IO.Path.Combine("Assets/DownloadedFiles", sceneName);
+
+        var buildScenes = EditorBuildSettings.scenes.ToList();
+
+        if (!buildScenes.Any(s => s.path == scenePath))
+        {
+            buildScenes.Add(new EditorBuildSettingsScene(scenePath, true));
+            EditorBuildSettings.scenes = buildScenes.ToArray();
+            Debug.Log("Added scene to build settings: " + scenePath);
+        }
+        else
+        {
+            Debug.LogWarning("Scene already in build settings: " + scenePath);
+        }
+    }
+
+    private bool IsSceneInBuildSettings(string scenePath)
+    {
+        foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes)
+        {
+            if (scene.path == scenePath)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
