@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/DownloadedFiles/TestScene_VRS.unity
     guid: a2e03cb0c65cd0440894ccabea94c141
+  - enabled: 1
+    path: Assets/DownloadedFiles/Create-with-VR-Starter-Scene.unity
+    guid: 19adf3e89cd7ff4489a9c8b5876abe44
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260,
       type: 2}

@@ -10,13 +10,12 @@ using System.Linq;
 public class SceneLoaderManager : MonoBehaviour
 {
     public DownloadManager downloadManager;
-    public GameObject xrRig; // Reference to the XRRig in the LobbyScene
-    public TMP_Dropdown filesDropdown; // Reference to the Dropdown element for listing files
-    public Button loadSceneButton; // Reference to the Load Scene button
+    public GameObject xrRig;
+    public TMP_Dropdown filesDropdown;
+    public Button loadSceneButton;
 
     void Start()
     {
-        // Add listener for the Load Scene button
         loadSceneButton.onClick.AddListener(OnFileSelected);
     }
 
@@ -25,6 +24,7 @@ public class SceneLoaderManager : MonoBehaviour
 
     }
 
+    // Called when a file is selected from the dropdown; determines if the scene is VR-ready or not
     private void OnFileSelected()
     {
         string selectedFile = filesDropdown.options[filesDropdown.value].text;
@@ -39,40 +39,38 @@ public class SceneLoaderManager : MonoBehaviour
         }
     }
 
+    // Loads a VR-ready scene and disables the XR rig if present
     public void LoadVRReadyScene(string sceneName)
     {
-        // Disable the XRRig in the LobbyScene
         if (xrRig != null)
         {
             xrRig.SetActive(false);
         }
-        // Load the selected scene
+
         StartCoroutine(AddAndLoadSceneAsync(sceneName));
     }
 
+    // Loads a non-VR scene and enables the XR rig if present
     public void LoadNotVRScene(string sceneName)
     {
-        // Ensure the XRRig in the LobbyScene is active
         if (xrRig != null)
         {
             xrRig.SetActive(true);
         }
-        // Load the selected scene
         StartCoroutine(AddAndLoadSceneAsync(sceneName));
     }
 
-    // Load the LobbyScene
+    // Loads the lobby scene
     public void LoadLobbyScene()
     {
         SceneManager.LoadSceneAsync("LobbyScene");
     }
 
+    // Adds the scene to build settings and asynchronously loads it
     private IEnumerator AddAndLoadSceneAsync(string sceneName)
     {
-        // Add the scene to the build settings
         AddSceneToBuildSettings(sceneName);
 
-        // Ensure the scene is in the build settings
         string scenePath = System.IO.Path.Combine("Assets/DownloadedFiles", sceneName);
         if (!IsSceneInBuildSettings(scenePath))
         {
@@ -88,6 +86,7 @@ public class SceneLoaderManager : MonoBehaviour
         }
     }
 
+    // Adds the selected scene to the build settings if it's not already added
     private void AddSceneToBuildSettings(string sceneName)
     {
         string scenePath = System.IO.Path.Combine("Assets/DownloadedFiles", sceneName);
@@ -106,6 +105,7 @@ public class SceneLoaderManager : MonoBehaviour
         }
     }
 
+    // Checks if the specified scene is already included in the build settings
     private bool IsSceneInBuildSettings(string scenePath)
     {
         foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes)
