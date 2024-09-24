@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
-using UnityEditor;
-using System.Linq;
 
 public class SceneLoaderManager : MonoBehaviour
 {
@@ -16,7 +14,7 @@ public class SceneLoaderManager : MonoBehaviour
 
     void Start()
     {
-        loadSceneButton.onClick.AddListener(OnFileSelected);
+        loadSceneButton.onClick.AddListener(OnLoadSceneButtonClicked);
     }
 
     void Update()
@@ -24,18 +22,27 @@ public class SceneLoaderManager : MonoBehaviour
 
     }
 
-    // Called when a file is selected from the dropdown; determines if the scene is VR-ready or not
-    private void OnFileSelected()
+    // Called when the Load Scene button is clicked
+    private void OnLoadSceneButtonClicked()
     {
         string selectedFile = filesDropdown.options[filesDropdown.value].text;
+        DetermineSceneTypeAndLoad(selectedFile);
+    }
 
-        if (selectedFile.EndsWith("_VRS.unity"))
+    // Determines whether to load a VR or non-VR scene based on the selected file
+    private void DetermineSceneTypeAndLoad(string sceneName)
+    {
+        if (sceneName.EndsWith("_VRS.unity"))
         {
-            LoadVRReadyScene(selectedFile);
+            LoadVRReadyScene(sceneName);
         }
-        else if (selectedFile.EndsWith(".unity"))
+        else if (sceneName.EndsWith(".unity"))
         {
-            LoadNotVRScene(selectedFile);
+            LoadNotVRScene(sceneName);
+        }
+        else
+        {
+            Debug.LogWarning("Selected file is not a valid Unity scene.");
         }
     }
 
@@ -47,7 +54,7 @@ public class SceneLoaderManager : MonoBehaviour
             xrRig.SetActive(false);
         }
 
-        StartCoroutine(AddAndLoadSceneAsync(sceneName));
+        StartCoroutine(LoadSceneAsync(sceneName));
     }
 
     // Loads a non-VR scene and enables the XR rig if present
@@ -57,7 +64,7 @@ public class SceneLoaderManager : MonoBehaviour
         {
             xrRig.SetActive(true);
         }
-        StartCoroutine(AddAndLoadSceneAsync(sceneName));
+        StartCoroutine(LoadSceneAsync(sceneName));
     }
 
     // Loads the lobby scene
@@ -66,17 +73,10 @@ public class SceneLoaderManager : MonoBehaviour
         SceneManager.LoadSceneAsync("LobbyScene");
     }
 
-    // Adds the scene to build settings and asynchronously loads it
-    private IEnumerator AddAndLoadSceneAsync(string sceneName)
+    // Asynchronously loads the scene
+    private IEnumerator LoadSceneAsync(string sceneName)
     {
-        AddSceneToBuildSettings(sceneName);
-
         string scenePath = System.IO.Path.Combine("Assets/DownloadedFiles", sceneName);
-        if (!IsSceneInBuildSettings(scenePath))
-        {
-            Debug.LogError("Scene " + scenePath + " is not in build settings.");
-            yield break;
-        }
 
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(scenePath);
 
@@ -84,37 +84,5 @@ public class SceneLoaderManager : MonoBehaviour
         {
             yield return null;
         }
-    }
-
-    // Adds the selected scene to the build settings if it's not already added
-    private void AddSceneToBuildSettings(string sceneName)
-    {
-        string scenePath = System.IO.Path.Combine("Assets/DownloadedFiles", sceneName);
-
-        var buildScenes = EditorBuildSettings.scenes.ToList();
-
-        if (!buildScenes.Any(s => s.path == scenePath))
-        {
-            buildScenes.Add(new EditorBuildSettingsScene(scenePath, true));
-            EditorBuildSettings.scenes = buildScenes.ToArray();
-            Debug.Log("Added scene to build settings: " + scenePath);
-        }
-        else
-        {
-            Debug.LogWarning("Scene already in build settings: " + scenePath);
-        }
-    }
-
-    // Checks if the specified scene is already included in the build settings
-    private bool IsSceneInBuildSettings(string scenePath)
-    {
-        foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes)
-        {
-            if (scene.path == scenePath)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }
